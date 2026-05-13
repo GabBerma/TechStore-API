@@ -67,3 +67,30 @@ Respuesta esperada:
   "expiracion": "1 hora"
 }
 ```
+
+## Endpoints de productos
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | `/api/productos` | Lista productos activos |
+| GET | `/api/productos/todos` | Lista todos los productos |
+| GET | `/api/productos/{id}` | Busca producto activo por ID |
+| GET | `/api/productos/todos/{id}` | Busca productos incluyendo eliminados |
+| POST | `/api/productos` | Crea productos |
+| PUT | `/api/productos/{id}` | Modifica productos |
+| DELETE | `/api/productos/{id}` | Eliminación lógica |
+
+## Validaciones y manejo de errores
+
+El proyecto implementa validaciones para asegurar integridad de datos:
+
+- Nombre obligatorio.
+- Categoría obligatoria.
+- Precio mayor a cero.
+- Stock no negativo.
+
+También se implementó manejo global de excepciones para:
+
+- Productos inexistentes.
+- Errores de validación.
+- Respuestas HTTP personalizadas.
