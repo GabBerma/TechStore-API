@@ -94,3 +94,14 @@ También se implementó manejo global de excepciones para:
 - Productos inexistentes.
 - Errores de validación.
 - Respuestas HTTP personalizadas.
+
+## Control de versiones
+
+El proyecto fue desarrollado utilizando Git y GitHub.
+
+Se trabajó mediante flujo de ramas:
+
+- `dev`: desarrollo.
+- `main`: versión estable.
+
+Al finalizar el desarrollo se realizó merge desde DEV hacia MAIN.
