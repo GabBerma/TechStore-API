@@ -45,3 +45,11 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Copias del proyecto
+TechStore-API/
+TechStore-API-Video/
+
+# Videos y comprimidos
+*.mp4
+*.zip
