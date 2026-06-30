@@ -1,5 +1,6 @@
 package cl.techstore.api.service;
 
+import cl.techstore.api.aws.SqsNotificationService;
 import cl.techstore.api.exception.ProductoNoEncontradoException;
 import cl.techstore.api.model.Producto;
 import cl.techstore.api.repository.ProductoRepository;
@@ -14,34 +15,39 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    // LISTAR SOLO ACTIVOS
+    @Autowired
+    private SqsNotificationService sqsNotificationService;
+
     public List<Producto> listarActivos() {
         return productoRepository.findByActivoTrue();
     }
 
-    // LISTAR TODOS, INCLUYENDO ELIMINADOS
     public List<Producto> listarTodos() {
         return productoRepository.findAll();
     }
 
-    // BUSCAR POR ID SOLO SI ESTÁ ACTIVO
     public Producto obtenerPorId(Long id) {
         return productoRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new ProductoNoEncontradoException("No existe un producto activo con ID: " + id));
     }
 
-    // BUSCAR POR ID INCLUYENDO ELIMINADOS
     public Producto obtenerPorIdTodos(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new ProductoNoEncontradoException("No existe un producto con ID: " + id));
     }
 
-    // CREAR
     public Producto crear(Producto producto) {
-        return productoRepository.save(producto);
+        Producto productoGuardado = productoRepository.save(producto);
+
+        sqsNotificationService.enviarMensajeProductoCreado(
+                productoGuardado.getId(),
+                productoGuardado.getNombre(),
+                productoGuardado.getCategoria()
+        );
+
+        return productoGuardado;
     }
 
-    // MODIFICAR
     public Producto modificar(Long id, Producto productoActualizado) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ProductoNoEncontradoException("No existe un producto con ID: " + id));
@@ -55,7 +61,6 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    // ELIMINAR (BORRADO LOGICO)
     public void eliminar(Long id) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ProductoNoEncontradoException("No existe un producto con ID: " + id));
